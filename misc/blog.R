@@ -12,7 +12,7 @@ pars1 <- list(
     matvals = c(0.3, 1, 1.7)
 )
 
-yini1 <- list(0.1, 0.8, 0.2, 0.4)
+yini1 <- c(0.1, 0.8, 0.2, 0.4)
 model1 <- base.model(pars1)
 tvec <- seq(0, 50, 0.01)
 
