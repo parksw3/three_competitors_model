@@ -34,7 +34,22 @@ for(i in 1:length(alpha)){
 
 df <- do.call("rbind", resList)
 
-ggplot(df) +
+g.phase <- ggplot(df) +
     geom_path(aes(N1, N2, group = id)) +
     facet_wrap(~alpha,
-        nrow = 3)
+        nrow = 3) +
+    scale_x_continuous(name = expression(N[1])) + 
+    scale_y_continuous(name = expression(N[2])) + 
+    theme(
+        strip.background = element_blank(),
+        strip.text.x = element_blank(),
+        panel.margin = grid::unit(0, "lines"),
+        axis.title.y = element_text(angle = 0)
+    ) + geom_text(
+        data = as.data.frame(alpha),
+        aes(x = 0.9, y = 0.95,
+            label = paste("alpha: ", alpha)
+        )
+    )
+
+ggsave("phase.png", g.phase, width = 4, height = 6, dpi = 600)

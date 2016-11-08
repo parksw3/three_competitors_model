@@ -2,10 +2,10 @@ library(deSolve)
 source("model.R")
 source("functions.R")
 
-alpha <- seq(0, 2, 0.02)
+alpha <- seq(0, 2, 0.01)
 beta <- 1.5
 
-nsim <- 20
+nsim <- 50
 
 y <- seq(0, 2, length.out =  nsim)
 
