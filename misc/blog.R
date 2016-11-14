@@ -5,7 +5,7 @@ library(dplyr)
 library(grid)
 library(gridExtra)
 source("../R/model.R")
-source("../R/functions.R")
+source("../R/circulant.R")
 scale_colour_discrete <- function(...,palette="Dark2") scale_colour_brewer(...,palette=palette)
 
 pars1 <- list(
@@ -16,7 +16,7 @@ yini1 <- c(0.1, 0.8, 0.2, 0.4)
 model1 <- base.model(pars1)
 tvec <- seq(0, 50, 0.01)
 
-r <- ode(unlist(yini1), tvec, model1, pars1)
+r <- ode(yini1, tvec, model1, pars1)
 
 df <- r %>%
     as.data.frame %>%

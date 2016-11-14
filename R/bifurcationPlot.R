@@ -6,7 +6,7 @@ l <- load("../data/bifurcation.rda")
 
 df <- resList %>%
     bind_rows %>%
-    filter(time > 395) %>%
+    filter(time > 180) %>%
     select(-time) %>%
     gather(key, value, -alpha) %>%
     mutate(value = round(value, 5)) %>%

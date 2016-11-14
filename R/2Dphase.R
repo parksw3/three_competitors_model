@@ -1,7 +1,7 @@
 library(deSolve)
 library(ggplot2); theme_set(theme_bw())
 source("model.R")
-source("functions.R")
+source("circulant.R")
 
 alpha <- c(0.25, 0.5, 0.75)
 beta <- 1.5
@@ -41,15 +41,18 @@ g.phase <- ggplot(df) +
     scale_x_continuous(name = expression(N[1])) + 
     scale_y_continuous(name = expression(N[2])) + 
     theme(
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
         strip.background = element_blank(),
         strip.text.x = element_blank(),
         panel.margin = grid::unit(0, "lines"),
         axis.title.y = element_text(angle = 0)
     ) + geom_text(
         data = as.data.frame(alpha),
-        aes(x = 0.9, y = 0.95,
+        aes(x = 1, y = 0.95,
             label = paste("alpha: ", alpha)
-        )
+        ),
+        hjust = 1
     )
 
 ggsave("phase.png", g.phase, width = 4, height = 6, dpi = 600)
