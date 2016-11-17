@@ -1,11 +1,10 @@
 library(plyr)
 source("model.R")
+source("parameters.R")
 source("circulant.R")
 source("lhs_y.R")
 
-pars <- list(matvals = c(0.3, 1, 1.7))
 model <- base.model(pars)
-tvec <- seq(0, 50, 0.1)
 
 y <- lhs_y(range = c(0.1, 1), n.state = 4, n.sim = 1000, seed = 101)
 
