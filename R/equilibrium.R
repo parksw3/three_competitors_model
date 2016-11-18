@@ -4,5 +4,5 @@ equilibrium <- function(x){
 
 eq_jaco <- function(x, pars){
     y <- equilibrium(x)
-    -matrix(rep(y, each = 4), 4, 4) * circulant(pars)
+    -matrix(rep(y, 4), 4, 4) * circulant(pars)
 }

@@ -25,22 +25,33 @@ y.remove <- theme(
     axis.text.y = element_blank(),
     axis.ticks.y = element_blank())
 
+brk1 <- c(0.03, 0.06, 0.09)
+brk2 <- c(0.35, 0.45, 0.55)
+expand0 <- c(0.02, 0)
+
+x.N1 <- scale_x_continuous(name = expression(N[1]),
+    breaks = brk1,
+    expand = expand0)
+x.N2 <- scale_x_continuous(name = expression(N[2]),
+    breaks = brk2,
+    expand = expand0)
+y.N3 <- scale_y_continuous(name = expression(N[3]),
+    breaks = brk1,
+    expand = expand0)
+y.N4 <- scale_y_continuous(name = expression(N[4]),
+    breaks = brk2,
+    expand = expand0)
+
 g13 <- g.base +
     geom_path(aes(N1, N3, group = sim, col = epsilon)) +
-    scale_x_continuous(name = expression(N[1]),
-        breaks = c(0.03, 0.06, 0.09),
-        expand = c(0.02, 0)) +
-    scale_y_continuous(name = expression(N[3]),
-        breaks = c(0.03, 0.06, 0.09),
-        expand = c(0.02, 0)) +
+    x.N1 +
+    y.N3 +
     theme(axis.title.y = element_text(margin=margin(0,8,0,0)))
 
 g14 <- g.base +
     geom_path(aes(N1, N4, group = sim, col = epsilon)) +
-    scale_y_continuous(name = expression(N[4]),
-        breaks = c(0.35, 0.45, 0.55),
-        expand = c(0.02, 0)) +
-    scale_x_continuous(expand = c(0.02, 0)) +
+    x.N1 +
+    y.N4 +
     x.remove + 
     stat_function(fun = function(x)1/2-x, lty = 2,
         col = "tomato2") +
@@ -48,10 +59,8 @@ g14 <- g.base +
     
 g23 <- g.base +
     geom_path(aes(N2, N3, group = sim, col = epsilon)) +
-    scale_x_continuous(name = expression(N[2]),
-        breaks = c(0.35, 0.45, 0.55),
-        expand = c(0.02, 0)) +
-    scale_y_continuous(expand = c(0.02, 0)) +
+    x.N2 +
+    y.N3 +
     y.remove +
     stat_function(fun = function(x)1/2-x, lty = 2,
         col = "tomato2",
@@ -59,8 +68,8 @@ g23 <- g.base +
 
 g24 <- g.base +
     geom_path(aes(N2, N4, group = sim, col = epsilon)) +
-    scale_x_continuous(expand = c(0.02, 0)) + 
-    scale_y_continuous(expand = c(0.02, 0)) +
+    x.N2 +
+    y.N4 +
     x.remove +
     y.remove +
     theme(legend.key.size = unit(c(0.15), unit = "in"),
