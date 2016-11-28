@@ -1,42 +1,31 @@
-library(deSolve)
-library(ggplot2); theme_set(theme_bw())
-source("model.R")
-source("circulant.R")
-
-alpha <- c(0.25, 0.5, 0.75)
-beta <- 1.5
+beta <- c(0.25, 0.5, 0.75)
 
 ylist <- list(
     y1 = c(0.1, 0.95, 0.2),
     y2 = c(0.9, 0.7, 0.2)
 )
 
-tvec <- seq(0, 200, 0.1)
+phaseList <- vector("list", length = length(beta))
+pars_base <- pars_tc
 
-resList <- vector("list", length = length(alpha))
-
-for(i in 1:length(alpha)){
-    pars <- list(
-        matvals = c(beta, alpha[i])
-    )
-    model <- base.model(pars)
-    res <- lapply(ylist, function(y){
-        r <- as.data.frame(ode(y, tvec, model, pars))
-        r[,"alpha"] <- as.character(alpha[i])
-        r <- setNames(r, c("time", "N1", "N2", "N3", "alpha"))
+for(i in 1:length(beta)){
+    pars_base$matvals[2] <- beta[i]
+    model_tmp <- base.model(pars_base)
+    res_tmp <- lapply(ylist, function(y){
+        r <- ode(y, tvec_long, model_tmp, pars_base) %>%
+            as_data_frame %>%
+            add_column(rep(as.character(beta[i]), length(tvec_long))) %>%
+            setNames(c("time", "N1", "N2", "N3", "beta"))
     })
     
-    all <- do.call("rbind", res)
-    all$id <- rep(names(res), sapply(res, nrow))
-    
-    resList[[i]] <- all
+    phaseList[[i]] <- res_tmp %>% bind_rows(.id = "y")
 }
 
-df <- do.call("rbind", resList)
+phase.df <- phaseList %>% bind_rows
 
-g.phase <- ggplot(df) +
-    geom_path(aes(N1, N2, group = id)) +
-    facet_wrap(~alpha,
+g.phase <- ggplot(phase.df) +
+    geom_path(aes(N1, N2, group = y)) +
+    facet_wrap(~beta,
         nrow = 3) +
     scale_x_continuous(name = expression(N[1])) + 
     scale_y_continuous(name = expression(N[2])) + 
@@ -46,13 +35,8 @@ g.phase <- ggplot(df) +
         strip.background = element_blank(),
         strip.text.x = element_blank(),
         panel.margin = grid::unit(0, "lines"),
-        axis.title.y = element_text(angle = 0)
-    ) + geom_text(
-        data = as.data.frame(alpha),
-        aes(x = 1, y = 0.95,
-            label = paste("alpha: ", alpha)
-        ),
+        axis.title.y = element_text(angle = 0)) + 
+    geom_text(data = as.data.frame(beta),
+        aes(x = 1, y = 0.95, label = paste("beta: ", beta)),
         hjust = 1
     )
-
-ggsave("phase.png", g.phase, width = 4, height = 6, dpi = 600)
